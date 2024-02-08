@@ -11,7 +11,6 @@ const userSchema = new mongoose.Schema({
     },
     password: {
         type: String,
-        min: [7, "password must have at least 7 words"],
         required: [true, "password must be filled"],
     },
     role: {

@@ -16,13 +16,21 @@ const getAllUsers = asyncHandler(async (req, resp) => {
 //@route GET /api/v1/user/me
 //@access Private
 const getMe = asyncHandler(async (req, resp) => {
-    resp.status(200).send("me info");
+    const { id } = req.user;
+    if (!id) {
+        resp.status(401);
+        throw new Error("login first");
+    }
+    const currentUser = await userModel.findById(id);
+    resp.status(200).send({
+        user: currentUser,
+    });
 });
 //@desc Sign Up User
 //@route POST /api/v1/user
 //@access Private
 const signUpUser = asyncHandler(async (req, resp) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, role } = req.body;
     const genSalt = await bcrypt.genSalt(10);
     if (!name || !email || !password) {
         throw new Error("All the required data have to be filled");
@@ -36,6 +44,7 @@ const signUpUser = asyncHandler(async (req, resp) => {
         name,
         email,
         password: hashPassword,
+        role,
     });
     resp.status(201).send({
         message: "sign up success",

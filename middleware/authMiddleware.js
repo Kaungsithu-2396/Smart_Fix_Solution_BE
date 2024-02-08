@@ -3,20 +3,22 @@ const userModel = require("../Models/userModel");
 const jwt = require("jsonwebtoken");
 const routeProtector = asyncHandler(async (req, resp, next) => {
     let token;
-    try {
-        if (
-            req.headers.authorization &&
-            req.headers.authorization.startsWith("Bearer")
-        ) {
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith("Bearer")
+    ) {
+        try {
             token = req.headers.authorization.split(" ")[1];
-            const decode = jwt.verify(token, process.env.SECRET_KEY);
-            req.user = await userModel.findById(decode.id);
+            let decode = jwt.verify(token, process.env.SECRET_KEY);
+            req.user = await userModel.findById(decode.id).select("-password");
+        } catch (error) {
+            resp.status(401);
+            throw new Error("INVALID token");
         }
-    } catch (error) {
+    } else {
         resp.status(401);
-        throw new Error("Invalid token");
+        throw new Error("No token found");
     }
-
     next();
 });
 module.exports = routeProtector;

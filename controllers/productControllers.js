@@ -5,6 +5,7 @@ const asyncHandler = require("express-async-handler");
 // @access PRIVATE
 const getAllProducts = asyncHandler(async (req, resp) => {
     const products = await productModel.find();
+    console.log(req.user);
     resp.status(200).send({
         status: "success",
         count: products.length,
