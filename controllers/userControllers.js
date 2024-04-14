@@ -26,6 +26,7 @@ const getMe = asyncHandler(async (req, resp) => {
         user: currentUser,
     });
 });
+
 //@desc Sign Up User
 //@route POST /api/v1/user
 //@access Private
@@ -83,8 +84,22 @@ const loginUser = asyncHandler(async (req, resp) => {
 //@access Private
 const updateUserInfo = asyncHandler(async (req, resp) => {
     const { id } = req.params;
+    const { name, email, password, role } = req.body;
+    const updatedVersion = await userModel.findByIdAndUpdate(
+        id,
+        {
+            name,
+            email,
+            password,
+            role,
+        },
+        {
+            new: true,
+        }
+    );
     resp.status(200).send({
         message: "update success",
+        user: updatedVersion,
     });
 });
 //@desc Delete User Info
@@ -92,6 +107,7 @@ const updateUserInfo = asyncHandler(async (req, resp) => {
 //@access Private
 const deleteUserInfo = asyncHandler(async (req, resp) => {
     const { id } = req.params;
+    await userModel.findByIdAndDelete(id);
     resp.status(200).send({
         message: "delete success",
     });

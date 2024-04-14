@@ -11,7 +11,10 @@ const {
     deleteUserInfo,
 } = require("../controllers/userControllers");
 
-userRoutes.route("/").get(getAllUsers).post(signUpUser);
+userRoutes
+    .route("/")
+    .get(routeProtector, verifyAdmin, getAllUsers)
+    .post(signUpUser);
 userRoutes
     .route("/:id")
     .put(routeProtector, verifyAdmin, updateUserInfo)

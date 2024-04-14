@@ -24,6 +24,9 @@ const productSchema = new Schema(
             type: String,
             required: [true, "please fill the description"],
         },
+        image: {
+            data: Buffer,
+        },
     },
     {
         timestamps: true,
