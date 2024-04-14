@@ -15,7 +15,9 @@ const addProduct = asyncHandler(async (req, resp) => {
     const colorCollection = Array.isArray(color)
         ? color
         : [...color.split(",")];
-    console.log(colorCollection);
+    const categoryCollection = Array.isArray(category)
+        ? category
+        : [...category.split(",")];
     if (!req.files || req.files.length == 0) {
         resp.status(500);
         throw new Error("no file found");
@@ -23,7 +25,7 @@ const addProduct = asyncHandler(async (req, resp) => {
     const newProduct = await productModel.create({
         name,
         color: colorCollection,
-        category,
+        category: categoryCollection,
         price,
         description,
         image: {
