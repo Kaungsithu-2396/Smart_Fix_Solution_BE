@@ -1,5 +1,5 @@
 const express = require("express");
-const verifyAdmin = require("../middleware/verifyAdmin");
+const { verifyAdmin } = require("../middleware/verifyAuthority");
 const routeProtector = require("../middleware/authMiddleware");
 const userRoutes = express.Router();
 const {

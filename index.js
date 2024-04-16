@@ -5,6 +5,7 @@ const productRoutes = require("./routes/productRoutes");
 const userRoutes = require("./routes/userRoutes");
 const serviceItemRoutes = require("./routes/serviceItemRoutes");
 const technicianRoutes = require("./routes/technicianRoutes");
+const deliveredServiceRoute = require("./routes/deliveredServiceRoutes");
 const multer = require("multer");
 const upload = multer();
 const PORT = process.env.PORT || 4000;
@@ -21,6 +22,7 @@ app.use("/api/v1/products", productRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/serviceItems", serviceItemRoutes);
 app.use("/api/v1/technicians", technicianRoutes);
+app.use("/api/v1/deliveredService", deliveredServiceRoute);
 app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`app is running on ${PORT}`);

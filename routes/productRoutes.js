@@ -1,7 +1,7 @@
 const express = require("express");
 const productRoutes = express.Router();
 const routeProtector = require("../middleware/authMiddleware");
-const verifyAdmin = require("../middleware/verifyAdmin");
+const { verifyAdmin } = require("../middleware/verifyAuthority");
 const uploadProduct_Img = require("../index");
 const {
     getAllProducts,
