@@ -6,7 +6,6 @@ const serviceItemSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
         require: [true, "email is left to fill"],
     },
     image: {

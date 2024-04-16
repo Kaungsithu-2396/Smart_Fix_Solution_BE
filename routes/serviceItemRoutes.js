@@ -1,9 +1,14 @@
 const express = require("express");
-const authMiddleware = require("../middleware/authMiddleware");
 const {
     addServiceItems,
     getAllServiceItems,
+    getSpecificServiceItem,
 } = require("../controllers/serviceItemControllers");
+const routeProtector = require("../middleware/authMiddleware");
 const serviceItemRoutes = express.Router();
-serviceItemRoutes.route("/").post(addServiceItems).get(getAllServiceItems);
+serviceItemRoutes
+    .route("/")
+    .post(routeProtector, addServiceItems)
+    .get(routeProtector, getAllServiceItems);
+serviceItemRoutes.route("/:id").get(routeProtector, getSpecificServiceItem);
 module.exports = serviceItemRoutes;

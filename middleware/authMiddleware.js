@@ -15,8 +15,11 @@ const routeProtector = asyncHandler(async (req, resp, next) => {
                 req.user = await technicianModel
                     .findById(decode.id)
                     .select("-password");
+            } else {
+                req.user = await userModel
+                    .findById(decode.id)
+                    .select("-password");
             }
-            req.user = await userModel.findById(decode.id).select("-password");
         } catch (error) {
             resp.status(401);
             throw new Error("INVALID token");

@@ -60,8 +60,8 @@ const logInTechnician = asyncHandler(async (req, resp) => {
 //@route PUT /api/v1/technician/:id
 //@access Private
 const assignTaskToTechnician = asyncHandler(async (req, resp) => {
-    const { id } = req.params;
-    const { task_id } = req.body;
+    const { id } = req.params; //id of technician
+    const { task_id } = req.body; //id of service Item
     let verifyServiceItem, technician;
     if (!task_id) {
         resp.status(400);
@@ -76,11 +76,13 @@ const assignTaskToTechnician = asyncHandler(async (req, resp) => {
         resp.status(404);
         throw new Error("no techncian found");
     }
+    //find the duplicated task id
     if (assignTechnician.assignedTask.includes(task_id)) {
         resp.status(400);
         throw new Error("this task's already been assigned");
     }
-    if (assignTechnician.assignedTask.length > 2) {
+    //Limit assign task to technician
+    if (assignTechnician.assignedTask.length >= 2) {
         await technicianModel.findByIdAndUpdate(
             id,
             {
@@ -99,6 +101,16 @@ const assignTaskToTechnician = asyncHandler(async (req, resp) => {
             { $push: { assignedTask: task_id } },
             { new: true }
         );
+        await serviceItemModel.findByIdAndUpdate(
+            task_id,
+            {
+                status: "processing",
+            },
+            {
+                new: true,
+            }
+        );
+
         for (let el of technician.assignedTask) {
             verifyServiceItem = await serviceItemModel
                 .findById(el)
@@ -112,6 +124,7 @@ const assignTaskToTechnician = asyncHandler(async (req, resp) => {
             message: "assigned",
             technician,
         });
+        ////
     }
 });
 const assignToken = (id, role) => {
@@ -119,17 +132,39 @@ const assignToken = (id, role) => {
         expiresIn: "2d",
     });
 };
+//@desc GET technicians
+//@route GET /api/v1/technician
+//@access Private
 const getAllTechnicians = asyncHandler(async (req, resp) => {
     const technicians = await technicianModel.find();
-    console.log(req.user);
     resp.status(200).send({
         count: technicians.length,
         data: technicians,
     });
 });
+//@desc GET technicians
+//@route GET /api/v1/technicians/:id
+//@access Private
+const respectiveTechnician = asyncHandler(async (req, resp) => {
+    const { id } = req.params;
+    if (!id) {
+        resp.status(400);
+        throw new Error("invalid id");
+    }
+    const technician = await technicianModel.findById(id);
+    if (!technician) {
+        resp.status(400);
+        throw new Error("no technician found");
+    }
+    resp.status(200).send({
+        data: technician,
+    });
+});
+
 module.exports = {
     registerTechnician,
     logInTechnician,
     assignTaskToTechnician,
     getAllTechnicians,
+    respectiveTechnician,
 };

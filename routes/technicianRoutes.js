@@ -6,11 +6,15 @@ const {
     logInTechnician,
     assignTaskToTechnician,
     getAllTechnicians,
+    respectiveTechnician,
 } = require("../controllers/technicianControllers");
 technicianRoutes
     .route("/")
     .post(registerTechnician)
     .get(routeProtector, getAllTechnicians);
 technicianRoutes.route("/login").post(logInTechnician);
-technicianRoutes.route("/:id").put(routeProtector, assignTaskToTechnician);
+technicianRoutes
+    .route("/:id")
+    .put(routeProtector, assignTaskToTechnician)
+    .get(routeProtector, respectiveTechnician);
 module.exports = technicianRoutes;
