@@ -27,6 +27,10 @@ const productSchema = new Schema(
         image: {
             data: Buffer,
         },
+        stockItem: {
+            type: Number,
+            default: 0,
+        },
     },
     {
         timestamps: true,

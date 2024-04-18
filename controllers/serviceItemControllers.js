@@ -75,8 +75,32 @@ const getSpecificServiceItem = asyncHandler(async (req, resp) => {
         technician: technicianForServiceItem,
     });
 });
+const deleteServiceItem = asyncHandler(async (req, resp) => {
+    const { id } = req.params; //id of service item
+    if (!id) {
+        resp.status(400);
+        throw new Error("invalid id");
+    }
+    const isValidServiceItem = await serviceItemModel.findById(id);
+    if (!isValidServiceItem) {
+        resp.status(400);
+        throw new Error("invalid service item");
+    }
+    await technicianModel.findByIdAndUpdate(
+        isValidServiceItem.technicianId,
+        {
+            $pull: { assignedTask: id },
+        },
+        { new: true }
+    );
+    await serviceItemModel.findByIdAndDelete(id);
+    resp.status(200).send({
+        message: "delete success",
+    });
+});
 module.exports = {
     addServiceItems,
     getAllServiceItems,
     getSpecificServiceItem,
+    deleteServiceItem,
 };

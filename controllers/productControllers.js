@@ -7,7 +7,7 @@ const upload = multer({ storage });
 // @route POST /api/v1/products
 // @access PRIVATE
 const addProduct = asyncHandler(async (req, resp) => {
-    const { name, color, category, price, description } = req.body;
+    const { name, color, category, price, description, stockItem } = req.body;
     if (!name || !color || !category || !price || !description) {
         resp.status(500);
         throw new Error("please provide complete data");
@@ -31,6 +31,7 @@ const addProduct = asyncHandler(async (req, resp) => {
         image: {
             data: req.files[0].buffer,
         },
+        stockItem,
     });
     resp.status(201).send({
         message: "success",
@@ -41,7 +42,7 @@ const addProduct = asyncHandler(async (req, resp) => {
 // @route GET /api/v1/products
 // @access PRIVATE
 const getAllProducts = asyncHandler(async (req, resp) => {
-    const products = await productModel.find().select("-image");
+    const products = await productModel.find();
     resp.status(200).send({
         status: "success",
         count: products.length,
@@ -91,11 +92,19 @@ const deleteProduct = asyncHandler(async (req, resp) => {
 // @access PRIVATE
 const updateProduct = asyncHandler(async (req, resp) => {
     const { id } = req.params;
-    const { name, category, color, price, description } = req.body;
+    const { name, color, price, description, category, stockItem } = req.body;
+    let colorCollection, categoryCollection;
     const images = req.files[0].buffer;
-    const colorCollection = Array.isArray(color)
-        ? color
-        : [...color.split(",")];
+    if (color) {
+        colorCollection = Array.isArray(color) ? color : [...color.split(",")];
+        console.log(colorCollection);
+    }
+    if (category) {
+        categoryCollection = Array.isArray(category)
+            ? category
+            : [...category?.split(",")];
+    }
+    //frontend must send data witht this format "red,green"
     if (!id) {
         resp.status(400);
         throw new Error("invalid id");
@@ -110,10 +119,11 @@ const updateProduct = asyncHandler(async (req, resp) => {
         {
             name,
             color: colorCollection,
-            category,
+            category: categoryCollection,
             price,
             description,
             images,
+            stockItem,
         },
         {
             new: true,
