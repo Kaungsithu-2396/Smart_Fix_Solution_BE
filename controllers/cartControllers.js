@@ -61,7 +61,24 @@ const getCartItemOfuser = asyncHandler(async (req, resp) => {
         data: cartItems,
     });
 });
+const deleteCartItem = asyncHandler(async (req, resp) => {
+    const { id } = req.params;
+    if (!id) {
+        resp.status(400);
+        throw new Error("invalid id");
+    }
+    const isItemExisit = await cartModel.findById(id);
+    if (!isItemExisit) {
+        resp.status(404);
+        throw new Error("This item doesn't exisit");
+    }
+    await cartModel.findByIdAndDelete(id);
+    resp.status(200).send({
+        message: "delete success",
+    });
+});
 module.exports = {
     addToCart,
     getCartItemOfuser,
+    deleteCartItem,
 };

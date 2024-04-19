@@ -14,5 +14,5 @@ serviceItemRoutes
 serviceItemRoutes
     .route("/:id")
     .get(routeProtector, getSpecificServiceItem)
-    .delete(deleteServiceItem);
+    .delete(routeProtector, deleteServiceItem);
 module.exports = serviceItemRoutes;

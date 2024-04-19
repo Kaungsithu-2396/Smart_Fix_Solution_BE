@@ -14,6 +14,7 @@ const PORT = process.env.PORT || 4000;
 const errorHandler = require("../backend/middleware/errorHandler");
 const app = express();
 const connectDB = require("./config/db_config");
+const paymentRoutes = require("./routes/paymentRoutes");
 
 connectDB();
 app.use(upload.any());
@@ -25,6 +26,7 @@ app.use("/api/v1/serviceItems", serviceItemRoutes);
 app.use("/api/v1/technicians", technicianRoutes);
 app.use("/api/v1/deliveredService", deliveredServiceRoute);
 app.use("/api/v1/cart", cartRoutes);
+app.use("/api/v1/payment", paymentRoutes);
 app.use(errorHandler);
 app.listen(PORT, () => {
     console.log(`app is running on ${PORT}`);
