@@ -7,11 +7,15 @@ const {
     assignTaskToTechnician,
     getAllTechnicians,
     respectiveTechnician,
+    getServiceItemHistory,
 } = require("../controllers/technicianControllers");
 technicianRoutes
     .route("/")
     .post(registerTechnician)
     .get(routeProtector, getAllTechnicians);
+technicianRoutes
+    .route("/serviceItems")
+    .get(routeProtector, getServiceItemHistory);
 technicianRoutes.route("/login").post(logInTechnician);
 technicianRoutes
     .route("/:id")

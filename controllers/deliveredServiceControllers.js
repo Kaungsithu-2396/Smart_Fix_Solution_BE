@@ -3,6 +3,9 @@ const deliveredServiceModel = require("../Models/deliveredServiceModel");
 const serviceItemModel = require("../Models/serviceItem_Model");
 const technicianModel = require("../Models/technicianModel");
 const sendMailToClient = require("../util/sendMail");
+//@desc submit task to technician
+//@Route POST /api/v1/technician
+//@access PRIVATE
 const submitDeliveredServiceItem = asyncHandler(async (req, resp) => {
     const { description, serviceItemId } = req.body;
     if (!serviceItemId) {
@@ -50,4 +53,5 @@ const submitDeliveredServiceItem = asyncHandler(async (req, resp) => {
         deliveredServiceItem: newDeliveredServiceItem,
     });
 });
+
 module.exports = { submitDeliveredServiceItem };

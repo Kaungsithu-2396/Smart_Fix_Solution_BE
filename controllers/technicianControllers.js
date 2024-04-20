@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const technicianModel = require("../Models/technicianModel");
 const jwt = require("jsonwebtoken");
 const serviceItemModel = require("../Models/serviceItem_Model");
+const { default: mongoose } = require("mongoose");
 //@desc POST Technicians
 //@route POST /api/v1/technicians
 //@access Public
@@ -160,11 +161,24 @@ const respectiveTechnician = asyncHandler(async (req, resp) => {
         data: technician,
     });
 });
-
+//@desc GET serviceItem history for each technician
+//@Route GET /api/v1/technician
+//@access PRIVATE
+const getServiceItemHistory = asyncHandler(async (req, resp) => {
+    const serviceItemRecord = await serviceItemModel.find({
+        technicianId: new mongoose.Types.ObjectId(req.user.id),
+    });
+    resp.status(200).send({
+        message: "success",
+        count: serviceItemRecord.length,
+        data: serviceItemRecord,
+    });
+});
 module.exports = {
     registerTechnician,
     logInTechnician,
     assignTaskToTechnician,
     getAllTechnicians,
     respectiveTechnician,
+    getServiceItemHistory,
 };
