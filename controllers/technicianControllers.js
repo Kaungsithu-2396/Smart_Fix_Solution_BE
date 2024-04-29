@@ -46,7 +46,7 @@ const logInTechnician = asyncHandler(async (req, resp) => {
         throw new Error("please register first");
     }
     if (await bcrypt.compare(password, isUserExisit.password)) {
-        resp.status(401).send({
+        resp.status(201).send({
             message: "authenticated",
             data: isUserExisit,
             token: assignToken(isUserExisit.id, isUserExisit.role),

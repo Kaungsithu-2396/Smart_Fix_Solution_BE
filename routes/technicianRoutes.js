@@ -9,10 +9,7 @@ const {
     respectiveTechnician,
     getServiceItemHistory,
 } = require("../controllers/technicianControllers");
-technicianRoutes
-    .route("/")
-    .post(registerTechnician)
-    .get(routeProtector, getAllTechnicians);
+technicianRoutes.route("/").post(registerTechnician).get(getAllTechnicians);
 technicianRoutes
     .route("/serviceItems")
     .get(routeProtector, getServiceItemHistory);

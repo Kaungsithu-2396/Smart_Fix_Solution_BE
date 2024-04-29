@@ -18,7 +18,9 @@ const addToCart = asyncHandler(async (req, resp) => {
 
     let productIdCol = [];
 
-    const checkIsAlreadyExisitItem = await cartModel.find();
+    const checkIsAlreadyExisitItem = await cartModel.find({
+        userId: req.user.id,
+    });
     for (let el of checkIsAlreadyExisitItem) {
         productIdCol.push(el.products[0].productId);
     }
@@ -61,6 +63,16 @@ const getCartItemOfuser = asyncHandler(async (req, resp) => {
         data: cartItems,
     });
 });
+const processCheckout = asyncHandler(async (req, resp) => {
+    const { id } = req.user;
+    console.log(id);
+    await cartModel.deleteMany({
+        userId: "65c45c106fe8aebc3bd3086f",
+    });
+    resp.status(200).send({
+        message: "delete success",
+    });
+});
 const deleteCartItem = asyncHandler(async (req, resp) => {
     const { id } = req.params;
     if (!id) {
@@ -81,4 +93,5 @@ module.exports = {
     addToCart,
     getCartItemOfuser,
     deleteCartItem,
+    processCheckout,
 };

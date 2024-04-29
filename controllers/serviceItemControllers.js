@@ -17,27 +17,23 @@ const getAllServiceItems = asyncHandler(async (req, resp) => {
 //@route POST /api/v1/serviceItems
 //@access Private
 const addServiceItems = asyncHandler(async (req, resp) => {
-    const { name, email, description, technicianId } = req.body;
+    const { name, email, description, technicianId, address, file_uploads } =
+        req.body;
 
-    if (
-        !name ||
-        !email ||
-        !description ||
-        req.files.length === 0 ||
-        !req.files
-    ) {
+    if (!name || !email || !description) {
         resp.status(400);
         throw new Error("Incompetence data providence");
     }
-    const image = req.files[0].buffer;
+
+    // const imgBase64 = Buffer.from(req.files[0].buffer).toString("base64");
+    // const imgSrc = `data:${req.files[0].mimetype};base64,${imgBase64}`;
     const newServiceItem = await serviceItemModel.create({
         name,
         email,
         description,
         technicianId,
-        image: {
-            data: image,
-        },
+        address,
+        image: file_uploads,
     });
     if (newServiceItem) {
         sendMailToClient(
@@ -66,10 +62,10 @@ const getSpecificServiceItem = asyncHandler(async (req, resp) => {
     const technicianForServiceItem = await technicianModel
         .findById(serviceItem.technicianId)
         .select("-password");
-    if (!technicianForServiceItem) {
-        resp.status(400);
-        throw new Error("no technician found");
-    }
+    // if (!technicianForServiceItem) {
+    //     resp.status(400);
+    //     throw new Error("no technician found");
+    // }
     resp.status(200).send({
         serviceItem,
         technician: technicianForServiceItem,

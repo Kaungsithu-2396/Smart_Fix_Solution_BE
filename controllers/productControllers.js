@@ -7,7 +7,8 @@ const upload = multer({ storage });
 // @route POST /api/v1/products
 // @access PRIVATE
 const addProduct = asyncHandler(async (req, resp) => {
-    const { name, color, category, price, description, stockItem } = req.body;
+    const { name, color, category, price, description, stockItem, file } =
+        req.body;
     if (!name || !color || !category || !price || !description) {
         resp.status(500);
         throw new Error("please provide complete data");
@@ -18,24 +19,28 @@ const addProduct = asyncHandler(async (req, resp) => {
     const categoryCollection = Array.isArray(category)
         ? category
         : [...category.split(",")];
-    if (!req.files || req.files.length == 0) {
-        resp.status(500);
-        throw new Error("no file found");
-    }
+
     const newProduct = await productModel.create({
         name,
         color: colorCollection,
         category: categoryCollection,
         price,
         description,
-        image: {
-            data: req.files[0].buffer,
-        },
+        image: file,
         stockItem,
     });
+
     resp.status(201).send({
         message: "success",
-        product: newProduct,
+        product: {
+            name,
+            color,
+            category,
+            price,
+            description,
+            stockItem,
+        },
+        image: file,
     });
 });
 // @desc GET products
@@ -43,6 +48,7 @@ const addProduct = asyncHandler(async (req, resp) => {
 // @access PRIVATE
 const getAllProducts = asyncHandler(async (req, resp) => {
     const products = await productModel.find();
+
     resp.status(200).send({
         status: "success",
         count: products.length,
@@ -92,9 +98,15 @@ const deleteProduct = asyncHandler(async (req, resp) => {
 // @access PRIVATE
 const updateProduct = asyncHandler(async (req, resp) => {
     const { id } = req.params;
-    const { name, color, price, description, category, stockItem } = req.body;
+    const { name, color, price, description, category, stockItem, img } =
+        req.body;
+
     let colorCollection, categoryCollection;
-    const images = req.files[0].buffer;
+    // if (req.files.length > 0) {
+    //     const imgBase64 = Buffer.from(req.files[0].buffer).toString("base64");
+    //     imgSrc = `data:${req.files[0].mimetype};base64,${imgBase64}`;
+    // }
+
     if (color) {
         colorCollection = Array.isArray(color) ? color : [...color.split(",")];
         console.log(colorCollection);
@@ -122,7 +134,7 @@ const updateProduct = asyncHandler(async (req, resp) => {
             category: categoryCollection,
             price,
             description,
-            images,
+            images: img,
             stockItem,
         },
         {

@@ -7,6 +7,7 @@ const {
     getMe,
     signUpUser,
     loginUser,
+    getSpecificUser,
     updateUserInfo,
     deleteUserInfo,
 } = require("../controllers/userControllers");
@@ -18,6 +19,7 @@ userRoutes
 userRoutes
     .route("/:id")
     .put(routeProtector, verifyAdmin, updateUserInfo)
+    .get(routeProtector, getSpecificUser)
     .delete(routeProtector, verifyAdmin, deleteUserInfo);
 userRoutes.route("/login").post(loginUser);
 userRoutes.route("/me").get(routeProtector, getMe);

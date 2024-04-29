@@ -26,7 +26,17 @@ const getMe = asyncHandler(async (req, resp) => {
         user: currentUser,
     });
 });
-
+const getSpecificUser = asyncHandler(async (req, resp) => {
+    const { id } = req.params;
+    if (!id) {
+        resp.status(401);
+        throw new Error("login first");
+    }
+    const currentUser = await userModel.findById(id);
+    resp.status(200).send({
+        user: currentUser,
+    });
+});
 //@desc Sign Up User
 //@route POST /api/v1/user
 //@access Private
@@ -49,7 +59,7 @@ const signUpUser = asyncHandler(async (req, resp) => {
     });
     resp.status(201).send({
         message: "sign up success",
-        user: newUser,
+        user: { name, email, role },
         token: signJWTToken(newUser.id, newUser.role),
     });
 });
@@ -124,4 +134,5 @@ module.exports = {
     loginUser,
     updateUserInfo,
     deleteUserInfo,
+    getSpecificUser,
 };

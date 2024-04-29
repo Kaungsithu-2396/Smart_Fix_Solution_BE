@@ -8,9 +8,7 @@ const serviceItemSchema = mongoose.Schema({
         type: String,
         require: [true, "email is left to fill"],
     },
-    image: {
-        data: Buffer,
-    },
+    image: String,
     description: {
         type: String,
         default: "No specific description is provided",
@@ -19,6 +17,10 @@ const serviceItemSchema = mongoose.Schema({
         type: String,
         enum: ["pending", "processing", "done"],
         default: "pending",
+    },
+    address: {
+        type: String,
+        default: "",
     },
     technicianId: {
         type: mongoose.Schema.Types.ObjectId,

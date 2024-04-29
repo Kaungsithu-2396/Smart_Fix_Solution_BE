@@ -3,6 +3,9 @@ const productRoutes = express.Router();
 const routeProtector = require("../middleware/authMiddleware");
 const { verifyAdmin } = require("../middleware/verifyAuthority");
 const uploadProduct_Img = require("../index");
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 const {
     getAllProducts,
     getSpecificProduct,
@@ -12,11 +15,11 @@ const {
 } = require("../controllers/productControllers");
 productRoutes
     .route("/")
-    .get(routeProtector, verifyAdmin, getAllProducts)
+    .get(getAllProducts)
     .post(routeProtector, verifyAdmin, addProduct);
 productRoutes
     .route("/:id")
-    .get(routeProtector, verifyAdmin, getSpecificProduct)
+    .get(getSpecificProduct)
     .delete(routeProtector, verifyAdmin, deleteProduct)
     .put(routeProtector, verifyAdmin, updateProduct);
 

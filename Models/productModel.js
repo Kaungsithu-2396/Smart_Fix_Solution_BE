@@ -25,7 +25,7 @@ const productSchema = new Schema(
             required: [true, "please fill the description"],
         },
         image: {
-            data: Buffer,
+            type: String,
         },
         stockItem: {
             type: Number,

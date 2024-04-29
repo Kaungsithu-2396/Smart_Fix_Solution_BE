@@ -11,6 +11,7 @@ const cartRoutes = require("./routes/cartRoutes");
 const multer = require("multer");
 const upload = multer();
 const PORT = process.env.PORT || 4000;
+const cors = require("cors");
 
 const errorHandler = require("../backend/middleware/errorHandler");
 const app = express();
@@ -18,6 +19,7 @@ const connectDB = require("./config/db_config");
 const paymentRoutes = require("./routes/paymentRoutes");
 
 connectDB();
+app.use(cors());
 app.use(upload.any());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
