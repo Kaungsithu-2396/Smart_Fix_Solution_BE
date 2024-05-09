@@ -16,6 +16,6 @@ technicianRoutes
 technicianRoutes.route("/login").post(logInTechnician);
 technicianRoutes
     .route("/:id")
-    .put(routeProtector, assignTaskToTechnician)
+    .patch(routeProtector, assignTaskToTechnician)
     .get(routeProtector, respectiveTechnician);
 module.exports = technicianRoutes;
